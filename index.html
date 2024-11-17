@@ -1,1 +1,82 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bibliothèque</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        img {
+            max-width: 100px;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Ma Bibliothèque</h1>
+    <table id="bibliothequeTable">
+        <thead>
+            <tr>
+                <th>Auteurs</th>
+                <th>Titre</th>
+                <th>Série</th>
+                <th>Date de publication</th>
+                <th>Editeur</th>
+                <th>Pages</th>
+                <th>ISBN</th>
+                <th>Couverture</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+
+    <script>
+        // Lire le fichier CSV et le transformer en tableau
+        async function chargerBibliotheque() {
+            const response = await fetch('bibliotheque.csv');
+            const data = await response.text();
+            const lignes = data.split('\n').slice(1);
+
+            const tableBody = document.querySelector('#bibliothequeTable tbody');
+            lignes.forEach(ligne => {
+                if (ligne.trim()) {
+                    const colonnes = ligne.split(';');
+                    const tr = document.createElement('tr');
+
+                    colonnes.forEach((colonne, index) => {
+                        const td = document.createElement('td');
+                        if (index === colonnes.length - 1) {
+                            // Dernière colonne : image de couverture
+                            const img = document.createElement('img');
+                            img.src = colonne.trim();
+                            td.appendChild(img);
+                        } else {
+                            td.textContent = colonne.trim();
+                        }
+                        tr.appendChild(td);
+                    });
+
+                    tableBody.appendChild(tr);
+                }
+            });
+        }
+
+        // Charger le tableau lors du chargement de la page
+        chargerBibliotheque();
+    </script>
+</body>
+</html>
 
